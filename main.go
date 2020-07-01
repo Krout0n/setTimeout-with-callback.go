@@ -37,7 +37,6 @@ func (rt *Runtime) register(callback func()) int {
 
 var runtime = NewRuntime()
 
-// 並行処理をするようにはなったけど・・・
 func setTimeout(ms int, callback func()) {
 	funcID := runtime.register(callback)
 	go func() {
