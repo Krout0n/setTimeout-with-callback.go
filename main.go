@@ -35,6 +35,8 @@ func main() {
 		setTimeout(20, func() {
 			println("まずはこっち")
 		})
-		println("終わり")
+		setTimeout(1000, func() {
+			println("終わり")
+		})
 	})
 }
