@@ -13,6 +13,8 @@ func NewRuntime() *Runtime {
 
 func (rt *Runtime) run(program func()) {
 	program()
+	for {
+	}
 }
 
 var runtime = NewRuntime()
