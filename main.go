@@ -29,6 +29,10 @@ func main() {
 		setTimeout(100, func() {
 			println("OK")
 		})
+		// 待つ秒数が少ないこっちが先に実行されたい
+		setTimeout(20, func() {
+			println("まずはこっち")
+		})
 		println("終わり")
 	})
 }
