@@ -17,10 +17,12 @@ func (rt *Runtime) run(program func()) {
 
 var runtime = NewRuntime()
 
-// とりあえず今はsleepして実行するだけ
+// 並行処理をするようにはなったけど・・・
 func setTimeout(ms int, callback func()) {
-	time.Sleep(time.Duration(ms) * time.Millisecond)
-	callback()
+	go func() {
+		time.Sleep(time.Duration(ms) * time.Millisecond)
+		callback()
+	}()
 }
 
 func main() {
