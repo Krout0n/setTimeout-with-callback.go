@@ -4,26 +4,45 @@ import (
 	"time"
 )
 
-// TODO: そのうちフィールドを用意する
-type Runtime struct{}
+type Runtime struct {
+	nextID    int
+	callbacks map[int]func()
+	recv      chan int
+}
 
 func NewRuntime() *Runtime {
-	return &Runtime{}
+	recv := make(chan int)
+	return &Runtime{recv: recv, callbacks: map[int]func(){}}
 }
 
 func (rt *Runtime) run(program func()) {
 	program()
 	for {
+		funcID := <-rt.recv
+		callback := rt.callbacks[funcID]
+		delete(rt.callbacks, funcID)
+		callback()
+		if len(rt.callbacks) == 0 {
+			break
+		}
 	}
+}
+
+func (rt *Runtime) register(callback func()) int {
+	registeredID := rt.nextID
+	rt.callbacks[registeredID] = callback
+	rt.nextID++
+	return registeredID
 }
 
 var runtime = NewRuntime()
 
 // 並行処理をするようにはなったけど・・・
 func setTimeout(ms int, callback func()) {
+	funcID := runtime.register(callback)
 	go func() {
 		time.Sleep(time.Duration(ms) * time.Millisecond)
-		callback()
+		runtime.recv <- funcID
 	}()
 }
 
